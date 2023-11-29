@@ -19,16 +19,14 @@ public interface EmployeePairRepository extends JpaRepository<EmployeePair, Long
             "ABS(DATEDIFF(day, LEAST(IFNULL(ep1.dateTo, CURRENT_DATE), IFNULL(ep2.dateTo, CURRENT_DATE)), GREATEST(ep1.dateFrom, ep2.dateFrom)))+1 " +
             "FROM EmployeeProject ep1 " +
             "JOIN EmployeeProject ep2 ON ep1.projectID = ep2.projectID AND ep1.employeeID < ep2.employeeID " +
-            "JOIN EmployeeProject ep ON ep1.projectID = ep.projectID " +
             "WHERE GREATEST(ep1.dateFrom, ep2.dateFrom) <= LEAST(IFNULL(ep1.dateTo, CURRENT_DATE), IFNULL(ep2.dateTo, CURRENT_DATE))"
     )
     void insertWorkingPairs();
 
-    @Query(
-            "SELECT employee1ID, employee2ID, SUM(totalDaysWorked) AS sumDaysWorked " +
-                    "FROM EmployeePair " +
-                    "GROUP BY employee1ID, employee2ID " +
-                    "ORDER BY sumDaysWorked DESC"
+    @Query("SELECT employee1ID, employee2ID, SUM(totalDaysWorked) AS sumDaysWorked " +
+            "FROM EmployeePair " +
+            "GROUP BY employee1ID, employee2ID " +
+            "ORDER BY sumDaysWorked DESC"
     )
     List<Object[]> findLongestWorkingPairs();
 
